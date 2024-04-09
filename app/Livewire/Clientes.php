@@ -13,9 +13,6 @@ class Clientes extends Component
 {
     use LivewireAlert;
 
-    public $tiposCliente;
-    public $data;
-    // Otros campos y métodos
 
     public $tipo_documento_id = 1;
     public $documento_identidad;
@@ -25,11 +22,6 @@ class Clientes extends Component
     public $telefono;
     public $email;
 
-    public function mount()
-    {
-        $this->tiposCliente = TipoCliente::all();
-        $this->data =  Cliente::with('getTipoCliente')->get();
-    }
 
     public function guardarCliente(Request $request){
         $rules = [
@@ -54,15 +46,16 @@ class Clientes extends Component
                 'telefono' => $this->telefono,
                 'email' => $this->email,
             ]);
-            $this->reset(); // Limpiar los campos después de guardar
-            $this->emit('clienteAgregado'); // Emitir un evento para cerrar el modal
+            $this->emit('clienteAgregado'); // Limpiar los campos después de guardar
         }
        
     }
 
     public function render()
     {
-        return view('livewire.clientes');
+        $tiposCliente = TipoCliente::all();
+        $data =  Cliente::with('getTipoCliente')->get();
+        return view('livewire.clientes', compact('data','tiposCliente'));
     }
     private function felicidades($mensaje){
         session()->flash('success', "Felicidades, tu acción fue procesada correctamente.");

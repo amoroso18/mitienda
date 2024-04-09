@@ -8,10 +8,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        @livewireStyles <!-- Importa los estilos de Livewire -->
+    @livewireStyles <!-- Importa los estilos de Livewire -->
     <style>
-        
-
         .cover-container {
             max-width: 42em;
         }
@@ -29,7 +27,7 @@
             margin-left: 1rem;
         }
 
-       
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -113,7 +111,9 @@
     <div class="container d-flex p-3 mx-auto flex-column">
         <header class="mb-5">
             <div>
-                <a href="{{ route('/') }}"><h3 class="float-md-start mb-0">Mi tienda</h3></a>
+                <a href="{{ route('/') }}">
+                    <h3 class="float-md-start mb-0">Mi tienda</h3>
+                </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     @auth
                         {{-- <a class="nav-link fw-bold py-1 px-0" href="#">Perfil</a> --}}
@@ -139,10 +139,10 @@
         </div>
 
     </div>
-    @livewireScripts <!-- Importa los scripts de Livewire -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+    @livewireScripts <!-- Importa los scripts de Livewire -->
 </body>
 
 </html>

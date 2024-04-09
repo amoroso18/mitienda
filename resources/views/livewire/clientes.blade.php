@@ -97,6 +97,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary" wire:click="guardarCliente">Guardar</button>
+                        <div class="mb-3 row"> 
+                            <span wire:loading class="col-md-3 offset-md-5 text-primary">Processing...</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,8 +107,11 @@
     </div>
 
 <script>
-    Livewire.on('clienteAgregado', () => {
-        $('#agregarClienteModal').modal('hide'); });
+    // Escuchar el evento 'clienteAgregado' emitido por Livewire
+    document.addEventListener('livewire:clienteAgregado', () => {
+        // Cerrar el modal
+        $('#agregarClienteModal').modal('hide');
+    });
 </script>
 
 </div>
