@@ -94,7 +94,8 @@
                                                 <td>{{ $item['cantidad'] }}</td>
                                                 <td>{{ $item['subtotal'] }}</td>
                                                 <td>
-                                                    <a class="btn btn-danger" wire:click="BorrarCarrito({{ $index }})">Eliminar</a>
+                                                    <a class="btn btn-danger"
+                                                        wire:click="BorrarCarrito({{ $index }})">Eliminar</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -116,7 +117,7 @@
                                         </tr>
                                         <tr>
                                             <td scope="col">Precio subtotal</td>
-                                            <td scope="col">{{$sumasubtotal}}</td>
+                                            <td scope="col">{{ $sumasubtotal }}</td>
                                         </tr>
                                         <tr>
                                             <td scope="col">Descuento</td>
@@ -124,11 +125,11 @@
                                         </tr>
                                         <tr>
                                             <td scope="col">Igv 18%</td>
-                                            <td scope="col">{{$igv}}</td>
+                                            <td scope="col">{{ $igv }}</td>
                                         </tr>
                                         <tr>
                                             <td scope="col">Total a pagar</td>
-                                            <td scope="col">{{$sumatotal}}</td>
+                                            <td scope="col">{{ $sumatotal }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -147,45 +148,124 @@
         </div>
     @elseif ($editarShow == 2)
         <div class="container">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" id="contenedor-imprimir">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                     <h1 class="mt-3 mb-5">Factura</h1>
 
-                    {{   dd($factura )}}
-                    <div class="d-flex align-items-end flex-column mb-3">
-                        <div class="col-6">
-                            <br>
-                            <hr>
+                    @if ($factura)
+
+
+                        <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
+                            <div class="feature col">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <div class="d-flex ">
+                                            <div class="me-auto p-2">Denominación</div>
+                                            <div class="p-2">{{$factura->cliente->denominacion}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="d-flex ">
+                                            <div class="me-auto p-2">Dirección</div>
+                                            <div class="p-2">{{$factura->cliente->direccion}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="d-flex">
+                                            <div class="me-auto p-2">Correo electrónico</div>
+                                            <div class="p-2">{{$factura->cliente->email}}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="feature col">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <div class="d-flex ">
+                                            <div class="me-auto p-2">Código de cajero</div>
+                                            <div class="p-2">Nro. 00000{{$factura->usuario->id}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="d-flex ">
+                                            <div class="me-auto p-2">Vendedor</div>
+                                            <div class="p-2">{{$factura->usuario->name}}</div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="d-flex">
+                                            <div class="me-auto p-2">Fecha de venta</div>
+                                            <div class="p-2">{{$factura->created_at}}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="table-responsive">
                             <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Descripcion</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                    <tr>
-                                        <td scope="col">Total de productos</td>
-                                      
-                                    </tr>
-                                    <tr>
-                                        <td scope="col">Precio subtotal</td>
-                                        <td scope="col">{{$factura->subtotal}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="col">Descuento</td>
-                                        <td scope="col">{{$factura->descuento}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="col">Igv 18%</td>
-                                        <td scope="col">{{$factura->igv}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="col">Total a pagar</td>
-                                        <td scope="col">{{$factura->total}}</td>
-                                    </tr>
+                                    @foreach ($factura->productos as $index => $item)
+                                        <tr>
+                                            <th scope="row">{{ $loop->iteration }}</th>
+                                            <td>{{ $item->producto->nombre }}</td>
+                                            <td>{{ $item->producto->descripcion }}</td>
+                                            <td>{{ $item->cantidad }}</td>
+                                            <td>{{ $item->precio_unitario }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+
+                        <div class="d-flex align-items-end flex-column mb-3">
+                            <div class="col-6">
+                                <hr>
+                                <table class="table table-striped table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <td scope="col">Total de productos</td>
+                                            <td scope="col">{{ $factura->productos->count() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="col">Precio subtotal</td>
+                                            <td scope="col">{{ $factura->subtotal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="col">Descuento</td>
+                                            <td scope="col">{{ $factura->descuento }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="col">Igv 18%</td>
+                                            <td scope="col">{{ $factura->igv }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="col">Total a pagar</td>
+                                            <td scope="col">{{ $factura->total }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    @endif
+
                 </div>
             </div>
+            <button  onclick="imprimirContenedor('contenedor-imprimir')" class="btn btn-primary">Imprimir</button>
+
         </div>
-   
     @else
         <h1 class="mt-3 mb-5">Ventas de mi tiendita</h1>
         <small class="d-block text-end mt-3 mb-5">
@@ -216,7 +296,7 @@
                             <td>
                                 <a class="btn btn-primary"
                                     wire:click="EditarIdListener({{ $item->id }})">Factura</a>
-                                   {{-- <a class="btn btn-danger"
+                                {{-- <a class="btn btn-danger"
                                  wire:click="EliminarIdListener({{ $item->id }})">Eliminar</a> --}}
                             </td>
                         </tr>
@@ -226,6 +306,16 @@
         </div>
     @endif
 
-
+<script>
+    function imprimirContenedor(id) {
+        var contenido = document.getElementById(id).innerHTML;
+        var ventanaImpresion = window.open('', '_blank');
+        ventanaImpresion.document.write('<html><head><title>Contenido para Imprimir</title>');
+        ventanaImpresion.document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">');
+        ventanaImpresion.document.write('</head><body>' + contenido + '</body></html>');
+        ventanaImpresion.document.close();
+        ventanaImpresion.print();
+    }
+</script>
 
 </div>

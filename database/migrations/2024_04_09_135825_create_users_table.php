@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            // $table->unsignedBigInteger('tipo_usuarios_id')->default(1);
+            // $table->foreign('tipo_usuarios_id')->references('id')->on('tipo_usuarios')->onDelete('cascade');   
+            // $table->unsignedBigInteger('tipo_estado_usuarios_id')->default(1);
+            // $table->foreign('tipo_estado_usuarios_id')->references('id')->on('tipo_estado_usuarios')->onDelete('cascade');   
+
             $table->foreignId('tipo_usuarios_id')->constrained('tipo_usuarios')->onDelete('cascade');
             $table->foreignId('tipo_estado_usuarios_id')->constrained('tipo_estado_usuarios')->onDelete('cascade');
             $table->string('email');

@@ -33,7 +33,7 @@ class Ventas extends Component
     public $igv = 0;
 
 
-    public $factura;
+    public $factura = null;
 
     public function render()
     {
@@ -118,7 +118,9 @@ class Ventas extends Component
 
     public function EditarIdListener($id){
         $this->editarShow = 2;
-        $factura = Venta::with('cliente','usuario','tipoEstadoVenta','productos')->where('id',$id)->first();
+        $this->factura = Venta::with('cliente', 'usuario', 'tipoEstadoVenta', 'productos')
+        ->where('id', $id)
+        ->first();
      
     }
     public function BorrarCliente(){
