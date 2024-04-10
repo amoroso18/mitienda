@@ -24,7 +24,11 @@ return new class extends Migration
                 ],
                 [
                     'id' => 2,
-                    'descripcion' => 'Cancelado',
+                    'descripcion' => 'Pedido',
+                ],
+                [
+                    'id' => 3,
+                    'descripcion' => 'Eliminado',
                 ],
             )
         );

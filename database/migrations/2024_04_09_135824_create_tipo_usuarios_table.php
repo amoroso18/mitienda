@@ -20,7 +20,7 @@ return new class extends Migration
             array(
                 [
                     'id' => 1,
-                    'descripcion' => 'Cliente',
+                    'descripcion' => 'Invitado',
                 ],
                 [
                     'id' => 3,

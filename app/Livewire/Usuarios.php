@@ -6,36 +6,70 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\User;
+use App\Models\TipoEstadoUsuario;
+use App\Models\TipoUsuario;
 
 class Usuarios extends Component
 {
     use LivewireAlert;
 
+    public $usuarios;
+    public $tipo_usuarios_id =1;
+    public $tipo_estado_usuarios_id =1;
+    public $email;
+    public $name;
+    public $password;
+
+    public $idSelect;
+    public $editarShow = false;
+
+
     public function render()
     {
         $data = User::with('getEstado','getPerfil')->get();
-        return view('livewire.usuarios',compact('data'));
+        $TipoEstadoUsuario = TipoEstadoUsuario::get();
+        $TipoUsuario = TipoUsuario::get();
+        return view('livewire.usuarios',compact('data','TipoEstadoUsuario','TipoUsuario'));
     }
-    private function felicidades($mensaje){
-        session()->flash('success', "Felicidades, tu acción fue procesada correctamente.");
-        return  $this->alert('success', 'Felicidades',[
-            'timer' => '25000',
-            'toast' => false,
-            'position' => 'center',
-            'text' => $mensaje,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Cerrar',
-        ]);
+    public function BorrarCliente(){
+        $student = User::find($this->idSelect);
+        try {
+            if ($student) {
+                $student->delete();
+                session()->flash('success', 'El usuario ha sido eliminado correctamente.');
+            } else {
+                session()->flash('error', 'No se pudo eliminar al usuario.');
+            }
+        } catch (\Throwable $th) {
+            session()->flash('error', 'No se pudo eliminar al usuario.');
+        }
     }
-    private function error(){
-        session()->flash('error', "Error inesperado, al parecer estas intentado ingresar un valor no aceptado o algo esta fallando, vuelve a cargar el navegador.");
-        return $this->alert('danger', 'Error',[
-            'timer' => '25000',
-            'toast' => false,
-            'position' => 'center',
-            'text' => $mensaje,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Cerrar',
-        ]);
+    public function EditarIdListener($id){
+        $usuario = User::find($id);
+        $this->tipo_usuarios_id = $usuario->tipo_usuarios_id;
+        $this->tipo_estado_usuarios_id = $usuario->tipo_estado_usuarios_id;
+        $this->email = $usuario->email;
+        $this->name = $usuario->name;
+        $this->idSelect = $id;
+        $this->editarShow = true;
+    }
+
+    public function EditarCliente(){
+        // Actualizar el cliente específico basado en el ID seleccionado
+        User::where('id', $this->idSelect)->update([
+            'tipo_usuarios_id' => $this->tipo_usuarios_id,
+            'tipo_estado_usuarios_id' => $this->tipo_estado_usuarios_id,
+            'name' => $this->name,
+            // 'password' => bcrypt($this->password),
+       ]);
+       session()->flash('success', 'El usuario ha sido editado correctamente.');
+       $this->CancelarEdicion();
+   }
+
+    public function CancelarEdicion(){
+        $this->editarShow = false;
+    }
+    public function AsignarIdListener($id){
+        $this->idSelect = $id;
     }
 }

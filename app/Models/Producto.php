@@ -9,6 +9,15 @@ class Producto extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'precio',
+        'stock',
+        'tipo_estado_tipos_id',
+    ];
+
+    
     public function getTipoProducto()
     {
         return $this->hasOne(TipoProducto::class, 'id', 'tipo_estado_tipos_id');
