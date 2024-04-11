@@ -61,6 +61,28 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## Mi tiendita Kate 
+
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+
+Para usarlo de manera local:
+
+1. Tener instalado wampserver con PHP 8.1
+2. Instalar composer
+3. Tener descargado el proyecto en wamp
+4. En el proyecto duplicar el archivo .env.example a .env
+5. Crear una base de datos llamado laravel, en caso de cambiar el nombre, se reemplaza en la variable de entorno global en el archivo .env DB_DATABASE=laravel
+6. Abrir una terminal en la carpeta del proyecto
+7. usar el comando: composer install
+8. usar el comando: php artisan key:generate
+9. usar el comando: php artisan migrate:fresh --seed
+10. para limpiar el cache: php artisan optimize:clear
+11 para inicialiar el proyecto: php artisan serve
+
+Para inicializar:
+primero: Inicializar wampserser
+segundo: Paso 6,10,11
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
