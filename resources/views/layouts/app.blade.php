@@ -122,6 +122,7 @@
                         <a class="nav-link fw-bold py-1 px-0" href="{{ route('clientes') }}">Clientes</a>
                         <a class="nav-link fw-bold py-1 px-0" href="{{ route('almacen') }}">Almacen</a>
                         <a class="nav-link fw-bold py-1 px-0" href="{{ route('compras') }}">Compra y Venta</a>
+                        {{-- <a class="nav-link fw-bold py-1 px-0" href="{{ route('categoria') }}">categoria</a> --}}
                         <a class="nav-link fw-bold py-1 px-0 text-danger" href="{{ route('logout') }}">Salir</a>
                     @else
                         <a class="nav-link fw-bold py-1 px-0 text-dark @if (Route::currentRouteName() == 'login') active @endif"

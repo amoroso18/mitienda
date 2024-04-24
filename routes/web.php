@@ -7,6 +7,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\CategoriaController;
 
 Route::get('/', function () {  return view('welcome');})->name('/');
 
@@ -31,5 +32,6 @@ Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios');
 Route::get('clientes', [ClienteController::class, 'index'])->name('clientes');
 Route::get('almacen', [ProductoController::class, 'index'])->name('almacen');
 Route::get('compras', [VentaController::class, 'index'])->name('compras');
+Route::get('categoria', [CategoriaController::class, 'index'])->name('categoria');
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

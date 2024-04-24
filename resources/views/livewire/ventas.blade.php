@@ -17,7 +17,7 @@
                     <hr>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <h4>Sobre la compra</h4>
-                        <p>La factura saldrá con los datos del cliente.</p>
+                        <p>El comprobante  saldrá con los datos del cliente.</p>
                         <div class="form-group">
                             <label for="cliente_id">Cliente:</label>
                             <select wire:model.live="cliente_id" class="form-control" id="cliente_id">
@@ -46,29 +46,66 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <h4>Agregar productos</h4>
                         <p>Selecciona el producto, ingresa la cantidad y presiona en agregar al carrito.</p>
-                        <div class="form-group">
-                            <label for="idSelect">Producto:</label>
-                            <select wire:model.live="idSelect" class="form-control" id="idSelect">
-                                @foreach ($Producto as $tipo)
-                                    <option value="{{ $tipo->id }}">{{ $tipo->nombre }}</option>
+                        <div class="form-group ">
+                            <label for="idCategoria">Categoría:</label>
+                            <select wire:model.live="idCategoria"  class="form-control" id="idCategoria">
+                                <option value="">Selecciona ....</option>
+                                @foreach ($categorias as $tipo)
+                                    <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
                                 @endforeach
                             </select>
-                            @error('idSelect')
+                            @error('idCategoria')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group mt-2">
-                            <label for="cantidad">Cantidad:</label>
-                            <input type="number" wire:model="cantidad" class="form-control" id="cantidad"
-                                min="0">
-                            @error('cantidad')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="d-flex justify-content-center mt-2">
-                            <button type="button" class="btn btn-dark" wire:click="agregarCarrito">Añadir al
-                                carrito</button>
-                        </div>
+                        @if ($idCategoria)
+                            <div class="form-group mt-2">
+                                <label for="idSelect">Producto:</label>
+                                <select wire:model.live="idSelect" class="form-control" id="idSelect">
+                                    <option value="">Selecciona ....</option>
+                                    @foreach ($Producto as $tipo)
+                                        <option value="{{ $tipo->id }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                @error('idSelect')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        @endif
+                        @if ($idSelect)
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+
+                                    <div class="form-group ">
+                                        <label for="cantidad">Cantidad:</label>
+                                        <input type="number" wire:model.live="cantidad" class="form-control" id="cantidad"
+                                            min="0">
+                                        @error('cantidad')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="idcantidades"></label>
+                                        <select wire:model.live="idcantidades" class="form-control" id="idcantidades">
+                                            @foreach ($cantidades as $tipo)
+                                                <option value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('idcantidades')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($idCategoria && $idSelect && $cantidad > 0)
+                            <div class="d-flex justify-content-center mt-3">
+                                <button type="button" class="btn btn-dark" wire:click="agregarCarrito">Añadir al
+                                    carrito</button>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <br> <br>
@@ -81,6 +118,7 @@
                                             <th scope="col">Producto</th>
                                             <th scope="col">Precio</th>
                                             <th scope="col">Cantidad</th>
+                                            <th scope="col"></th>
                                             <th scope="col">Subtotal</th>
                                             <th scope="col"></th>
                                         </tr>
@@ -92,6 +130,7 @@
                                                 <td>{{ $item['descripcion'] }}</td>
                                                 <td>{{ $item['precio'] }}</td>
                                                 <td>{{ $item['cantidad'] }}</td>
+                                                <td>{{ $item['tipo'] }}</td>
                                                 <td>{{ $item['subtotal'] }}</td>
                                                 <td>
                                                     <a class="btn btn-danger"
@@ -161,19 +200,19 @@
                                     <li class="list-group-item">
                                         <div class="d-flex ">
                                             <div class="me-auto p-2">Denominación</div>
-                                            <div class="p-2">{{$factura->cliente->denominacion}}</div>
+                                            <div class="p-2">{{ $factura->cliente->denominacion }}</div>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex ">
                                             <div class="me-auto p-2">Dirección</div>
-                                            <div class="p-2">{{$factura->cliente->direccion}}</div>
+                                            <div class="p-2">{{ $factura->cliente->direccion }}</div>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex">
                                             <div class="me-auto p-2">Correo electrónico</div>
-                                            <div class="p-2">{{$factura->cliente->email}}</div>
+                                            <div class="p-2">{{ $factura->cliente->email }}</div>
                                         </div>
                                     </li>
                                 </ul>
@@ -184,19 +223,19 @@
                                     <li class="list-group-item">
                                         <div class="d-flex ">
                                             <div class="me-auto p-2">Código de cajero</div>
-                                            <div class="p-2">Nro. 00000{{$factura->usuario->id}}</div>
+                                            <div class="p-2">Nro. 00000{{ $factura->usuario->id }}</div>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex ">
                                             <div class="me-auto p-2">Vendedor</div>
-                                            <div class="p-2">{{$factura->usuario->name}}</div>
+                                            <div class="p-2">{{ $factura->usuario->name }}</div>
                                         </div>
                                     </li>
                                     <li class="list-group-item">
                                         <div class="d-flex">
                                             <div class="me-auto p-2">Fecha de venta</div>
-                                            <div class="p-2">{{$factura->created_at}}</div>
+                                            <div class="p-2">{{ $factura->created_at }}</div>
                                         </div>
                                     </li>
                                 </ul>
@@ -212,6 +251,7 @@
                                         <th scope="col">Producto</th>
                                         <th scope="col">Descripcion</th>
                                         <th scope="col">Cantidad</th>
+                                        <th scope="col"></th>
                                         <th scope="col">Precio</th>
                                     </tr>
                                 </thead>
@@ -222,6 +262,7 @@
                                             <td>{{ $item->producto->nombre }}</td>
                                             <td>{{ $item->producto->descripcion }}</td>
                                             <td>{{ $item->cantidad }}</td>
+                                            <td>{{ $item->tipo }}</td>
                                             <td>{{ $item->precio_unitario }}</td>
                                         </tr>
                                     @endforeach
@@ -263,7 +304,7 @@
 
                 </div>
             </div>
-            <button  onclick="imprimirContenedor('contenedor-imprimir')" class="btn btn-primary">Imprimir</button>
+            <button onclick="imprimirContenedor('contenedor-imprimir')" class="btn btn-primary">Imprimir</button>
 
         </div>
     @else
@@ -306,16 +347,18 @@
         </div>
     @endif
 
-<script>
-    function imprimirContenedor(id) {
-        var contenido = document.getElementById(id).innerHTML;
-        var ventanaImpresion = window.open('', '_blank');
-        ventanaImpresion.document.write('<html><head><title>Contenido para Imprimir</title>');
-        ventanaImpresion.document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">');
-        ventanaImpresion.document.write('</head><body>' + contenido + '</body></html>');
-        ventanaImpresion.document.close();
-        ventanaImpresion.print();
-    }
-</script>
+    <script>
+        function imprimirContenedor(id) {
+            var contenido = document.getElementById(id).innerHTML;
+            var ventanaImpresion = window.open('', '_blank');
+            ventanaImpresion.document.write('<html><head><title>Contenido para Imprimir</title>');
+            ventanaImpresion.document.write(
+                '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">'
+                );
+            ventanaImpresion.document.write('</head><body>' + contenido + '</body></html>');
+            ventanaImpresion.document.close();
+            ventanaImpresion.print();
+        }
+    </script>
 
 </div>

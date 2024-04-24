@@ -135,6 +135,9 @@
     @else
         <h1 class="mt-3 mb-5">Almacén</h1>
         <small class="d-block text-end mt-3 mb-5">
+            <a href="{{ route('categoria') }}" class="btn btn-dark" wire:click="NuevoListener">
+                Categorias
+            </a>
             <button type="button" class="btn btn-dark" wire:click="NuevoListener">
                 Nuevo Producto
             </button>
@@ -144,7 +147,7 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Tipo</th>
+                        <th scope="col">Categoria</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Descrip.</th>
                         <th scope="col">Precio</th>

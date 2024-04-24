@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\TipoProducto;
+use App\Models\TipoCantidad;
 
 use App\Models\Producto;
 use App\Models\Cliente;
@@ -24,10 +25,14 @@ class Ventas extends Component
     public $tipo_estado_venta_id = 1;
     public $total = 0;
        
-    public $idSelect = 1;
+    public $idcantidades = 1;
+    public $idCategoria;
+    public $idSelect;
     public $cantidad = 0;
     public $editarShow = 4;
     public $carrito = [];
+    public $categorias = [];
+    public $cantidades = [];
     public $sumasubtotal = 0;
     public $sumatotal = 0;
     public $igv = 0;
@@ -35,31 +40,70 @@ class Ventas extends Component
 
     public $factura = null;
 
+    public function mount()
+    {
+        $this->categorias = TipoProducto::get();
+        $this->cantidades = TipoCantidad::get();
+    }
+
     public function render()
     {
-
         $Venta = Venta::with('cliente','usuario','tipoEstadoVenta')->get();
         $Cliente = Cliente::get();
         $TipoEstadoVenta = TipoEstadoVenta::where('id','!=',3)->get();
-        $Producto = Producto::with('getTipoProducto')->get();
+        // $Producto = Producto::with('getTipoProducto')->get();
         $carrito = $this->carrito;
+
+        $Producto = [];
+        if ($this->idCategoria) {
+            // $this->idSelect = null;
+            $Producto = Producto::with('getTipoProducto')->where('tipo_estado_tipos_id', $this->idCategoria)->get();
+        }
+
         return view('livewire.ventas',compact('Producto','Venta','Cliente','TipoEstadoVenta','carrito'));
     }
-
     public function NuevoListener(){
         $this->editarShow = 1;
     }
     public function agregarCarrito(){
-        $pro = Producto::find($this->idSelect);
-        $subtotal = $pro->precio*$this->cantidad;
-        $this->carrito[] = [
-            "id" => $pro->id,
-            "descripcion" => $pro->descripcion,
-            "precio" => $pro->precio,
-            "cantidad" => $this->cantidad,
-            "subtotal" => $subtotal
-        ];
+        $producto = Producto::find($this->idSelect);
+        $tipoCantidad = TipoCantidad::find($this->idcantidades);
+        $subtotal = $producto->precio * $this->cantidad;
+
+        // Verificar si el producto ya existe en el carrito
+        $index = null;
+        foreach ($this->carrito as $key => $item) {
+            if ($item['id'] == $producto->id) {
+                if ($item['tipo'] == $tipoCantidad->descripcion) {
+                    // Si el producto ya está en el carrito con el mismo tipo de cantidad, aumentar la cantidad y subtotal
+                    $this->carrito[$key]['cantidad'] += $this->cantidad;
+                    $this->carrito[$key]['subtotal'] += $subtotal;
+                    $index = $key;
+                    break;
+                } else {
+                    // Si el producto ya está en el carrito pero con un tipo de cantidad diferente, crear una nueva entrada
+                    continue;
+                }
+            }
+        }
+
+        // Si no se encontró una coincidencia con el mismo tipo de cantidad, agregar un nuevo producto al carrito
+        if ($index === null) {
+            $this->carrito[] = [
+                "id" => $producto->id,
+                "descripcion" => $producto->descripcion,
+                "precio" => $producto->precio,
+                "cantidad" => $this->cantidad,
+                "tipo" => $tipoCantidad->descripcion,
+                "subtotal" => $subtotal
+            ];
+        }
+
+        // Llamar a una función para evaluar los datos (si existe)
         self::evaluardata();
+
+        // Reiniciar el valor de idSelect después de agregar el producto al carrito
+        $this->idSelect = null;
     }
     public function BorrarCarrito($indice){
         if (isset($this->carrito[$indice])) {
@@ -102,8 +146,9 @@ class Ventas extends Component
             foreach ($this->carrito  as $key => $value) {
                 $tg = new VentaProducto();
                 $tg->venta_id =  $venta->id;
-                $tg->cantidad =  $value['id'];
-                $tg->producto_id =  $value['cantidad'];
+                $tg->cantidad =  $value['cantidad'];
+                $tg->producto_id =  $value['id'];
+                $tg->tipo =  $value['tipo'];
                 $tg->precio_unitario = $value['precio'];
                 $tg->save();
             }
@@ -115,12 +160,12 @@ class Ventas extends Component
         session()->flash('error', 'No se pudo completar la venta');
        }
     }
-
     public function EditarIdListener($id){
         $this->editarShow = 2;
         $this->factura = Venta::with('cliente', 'usuario', 'tipoEstadoVenta', 'productos')
         ->where('id', $id)
         ->first();
+        // dd($this->factura->productos);
      
     }
     public function BorrarCliente(){
@@ -139,5 +184,11 @@ class Ventas extends Component
     }
     public function Cancelar(){
         $this->editarShow = 4;
+    }
+    public function updatedIdCategoria($value)
+    {
+        if ($this->idCategoria) {
+            $this->idSelect = null;
+        }
     }
 }

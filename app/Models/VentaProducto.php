@@ -17,9 +17,14 @@ class VentaProducto extends Model
     ];
 
     // Relación con Producto (un registro de venta de producto pertenece a un producto)
+    // public function producto()
+    // {
+    //     return $this->belongsTo(Producto::class);
+    // }
+
     public function producto()
     {
-        return $this->belongsTo(Producto::class);
+        return $this->belongsTo(Producto::class, 'producto_id', 'id');
     }
 
 }
