@@ -39,7 +39,7 @@ return new class extends Migration
                     'password' => '$2y$12$UVOsc3lDEh5bZcx75wP2zOSFALUy0M.eLUnQaE6N1G8Ve7VIalKFa',
                 ],
                 [
-                    'id' => 1,
+                    'id' => 2,
                     'tipo_usuarios_id' => 3,
                     'tipo_estado_usuarios_id' => 1,
                     'email' => 'Katerin@mitienda.com',
@@ -48,7 +48,7 @@ return new class extends Migration
                     'password' => '$2y$12$UVOsc3lDEh5bZcx75wP2zOSFALUy0M.eLUnQaE6N1G8Ve7VIalKFa',
                 ],
                 [
-                    'id' => 1,
+                    'id' => 3,
                     'tipo_usuarios_id' => 3,
                     'tipo_estado_usuarios_id' => 1,
                     'email' => 'erika22@mitienda.com',
